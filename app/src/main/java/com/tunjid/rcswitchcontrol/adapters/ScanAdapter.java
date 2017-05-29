@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tunjid.androidbootstrap.communications.bluetooth.ScanResultCompat;
+import com.tunjid.androidbootstrap.core.text.SpanBuilder;
 import com.tunjid.rcswitchcontrol.R;
 
 import java.util.List;
@@ -56,8 +57,7 @@ public class ScanAdapter extends RecyclerView.Adapter<ScanAdapter.ViewHolder> {
             implements
             View.OnClickListener {
 
-        TextView deviceName;
-        TextView deviceAddress;
+        TextView deviceDetails;
 
         ScanResultCompat result;
         AdapterListener adapterListener;
@@ -65,8 +65,7 @@ public class ScanAdapter extends RecyclerView.Adapter<ScanAdapter.ViewHolder> {
         ViewHolder(View itemView) {
             super(itemView);
 
-            deviceAddress = (TextView) itemView.findViewById(R.id.device_address);
-            deviceName = (TextView) itemView.findViewById(R.id.device_name);
+            deviceDetails = (TextView) itemView.findViewById(R.id.text);
             itemView.setOnClickListener(this);
         }
 
@@ -74,8 +73,14 @@ public class ScanAdapter extends RecyclerView.Adapter<ScanAdapter.ViewHolder> {
             this.result = result;
             this.adapterListener = adapterListener;
 
-            deviceAddress.setText(result.getScanRecord() != null ? result.getScanRecord().getDeviceName() : "");
-            deviceName.setText(result.getDevice() != null ? result.getDevice().getAddress() : "");
+            String name = result.getScanRecord() != null ? result.getScanRecord().getDeviceName() : "";
+            String address = result.getDevice() != null ? result.getDevice().getAddress() : "";
+
+            deviceDetails.setText(new SpanBuilder(itemView.getContext(), name)
+                    .appendNewLine()
+                    .appendCharsequence(address)
+                    .build()
+            );
         }
 
         @Override
