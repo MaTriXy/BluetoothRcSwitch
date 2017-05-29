@@ -20,7 +20,7 @@ import java.util.List;
  * Created by tj.dahunsi on 2/4/17.
  */
 
-public class NsdAdapter extends BaseRecyclerViewAdapter<NsdAdapter.NSDViewHolder,
+public class NsdAdapter extends BaseRecyclerViewAdapter<NsdAdapter.NsdViewHolder,
         NsdAdapter.ServiceClickedListener> {
 
     private List<NsdServiceInfo> infoList;
@@ -31,13 +31,13 @@ public class NsdAdapter extends BaseRecyclerViewAdapter<NsdAdapter.NSDViewHolder
     }
 
     @Override
-    public NSDViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NsdViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_nsd_list, parent, false);
-        return new NSDViewHolder(view);
+        return new NsdViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(NSDViewHolder holder, int position) {
+    public void onBindViewHolder(NsdViewHolder holder, int position) {
         holder.bind(infoList.get(position), adapterListener);
     }
 
@@ -52,13 +52,13 @@ public class NsdAdapter extends BaseRecyclerViewAdapter<NsdAdapter.NSDViewHolder
         boolean isSelf(NsdServiceInfo serviceInfo);
     }
 
-    static class NSDViewHolder extends BaseViewHolder<ServiceClickedListener>
+    static class NsdViewHolder extends BaseViewHolder<ServiceClickedListener>
             implements View.OnClickListener {
 
         NsdServiceInfo serviceInfo;
         TextView textView;
 
-        NSDViewHolder(View itemView) {
+        NsdViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView;
             itemView.setOnClickListener(this);
