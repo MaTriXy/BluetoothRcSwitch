@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:padding="@dimen/single_margin"/>
+    android:lineSpacingMultiplier="1.2"
+    android:padding="@dimen/single_margin" />

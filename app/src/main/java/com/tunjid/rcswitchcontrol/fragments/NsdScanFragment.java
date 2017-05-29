@@ -21,7 +21,7 @@ import com.tunjid.androidbootstrap.communications.nsd.NsdHelper;
 import com.tunjid.androidbootstrap.communications.nsd.ResolveListener;
 import com.tunjid.rcswitchcontrol.R;
 import com.tunjid.rcswitchcontrol.abstractclasses.BaseFragment;
-import com.tunjid.rcswitchcontrol.adapters.NSDAdapter;
+import com.tunjid.rcswitchcontrol.adapters.NsdAdapter;
 import com.tunjid.rcswitchcontrol.services.ClientNsdService;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
  */
 public class NsdScanFragment extends BaseFragment
         implements
-        NSDAdapter.ServiceClickedListener {
+        NsdAdapter.ServiceClickedListener {
 
     private static final long SCAN_PERIOD = 10000;    // Stops scanning after 10 seconds.
 
@@ -104,7 +104,7 @@ public class NsdScanFragment extends BaseFragment
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.list);
 
-        recyclerView.setAdapter(new NSDAdapter(this, services));
+        recyclerView.setAdapter(new NsdAdapter(this, services));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
 

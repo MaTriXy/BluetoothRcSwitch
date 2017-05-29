@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tunjid.androidbootstrap.core.text.SpanBuilder;
 import com.tunjid.rcswitchcontrol.R;
 import com.tunjid.androidbootstrap.core.abstractclasses.BaseRecyclerViewAdapter;
 import com.tunjid.androidbootstrap.core.abstractclasses.BaseViewHolder;
@@ -19,12 +20,12 @@ import java.util.List;
  * Created by tj.dahunsi on 2/4/17.
  */
 
-public class NSDAdapter extends BaseRecyclerViewAdapter<NSDAdapter.NSDViewHolder,
-        NSDAdapter.ServiceClickedListener> {
+public class NsdAdapter extends BaseRecyclerViewAdapter<NsdAdapter.NSDViewHolder,
+        NsdAdapter.ServiceClickedListener> {
 
     private List<NsdServiceInfo> infoList;
 
-    public NSDAdapter(NSDAdapter.ServiceClickedListener listener, List<NsdServiceInfo> list) {
+    public NsdAdapter(NsdAdapter.ServiceClickedListener listener, List<NsdServiceInfo> list) {
         super(listener);
         this.infoList = list;
     }
@@ -67,20 +68,20 @@ public class NSDAdapter extends BaseRecyclerViewAdapter<NSDAdapter.NSDViewHolder
             serviceInfo = info;
             adapterListener = listener;
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(info.getServiceName()).append("\n")
-                    .append(info.getHost().getHostAddress());
+            SpanBuilder spanBuilder = new SpanBuilder(itemView.getContext(), info.getServiceName())
+                    .appendNewLine()
+                    .appendCharsequence(info.getHost().getHostAddress());
 
             boolean isSelf = adapterListener.isSelf(info);
 
-            if (isSelf) stringBuilder.append(" (SELF)");
+            if (isSelf) spanBuilder.appendCharsequence(" (SELF)");
 
             int color = ContextCompat.getColor(itemView.getContext(), isSelf
                     ? R.color.dark_grey
                     : R.color.colorPrimary);
 
             textView.setTextColor(color);
-            textView.setText(stringBuilder.toString());
+            textView.setText(spanBuilder.build());
         }
 
         @Override
