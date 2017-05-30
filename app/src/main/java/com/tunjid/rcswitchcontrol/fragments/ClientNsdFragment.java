@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tunjid.rcswitchcontrol.R;
 import com.tunjid.androidbootstrap.core.components.ServiceConnection;
+import com.tunjid.androidbootstrap.core.view.ViewHider;
+import com.tunjid.rcswitchcontrol.R;
 import com.tunjid.rcswitchcontrol.abstractclasses.BaseFragment;
 import com.tunjid.rcswitchcontrol.activities.MainActivity;
 import com.tunjid.rcswitchcontrol.adapters.ChatAdapter;
@@ -38,6 +40,7 @@ import com.tunjid.rcswitchcontrol.services.ClientNsdService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.tunjid.rcswitchcontrol.model.RcSwitch.SWITCH_PREFS;
@@ -163,6 +166,7 @@ public class ClientNsdFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_nsd_client, container, false);
+        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
 
         connectionStatus = (TextView) rootView.findViewById(R.id.connection_status);
         switchList = (RecyclerView) rootView.findViewById(R.id.switch_list);
@@ -176,6 +180,29 @@ public class ClientNsdFragment extends BaseFragment
 
         ItemTouchHelper helper = new ItemTouchHelper(swipeCallBack);
         helper.attachToRecyclerView(switchList);
+
+        final ViewHider viewHider = new ViewHider(commandsView, ViewHider.BOTTOM, 300);
+        final AtomicInteger lastOffSet = new AtomicInteger(0);
+
+        switchList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy == 0) return;
+                if (dy > 0) viewHider.hide();
+                else viewHider.show();
+            }
+        });
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (verticalOffset == 0) return;
+                if (verticalOffset > lastOffSet.get()) viewHider.hide();
+                else viewHider.show();
+
+                lastOffSet.set(verticalOffset);
+            }
+        });
 
         return rootView;
     }

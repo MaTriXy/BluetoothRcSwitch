@@ -26,9 +26,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.tunjid.rcswitchcontrol.R;
 import com.tunjid.androidbootstrap.core.components.ServiceConnection;
-import com.tunjid.rcswitchcontrol.ViewHider;
+import com.tunjid.androidbootstrap.core.view.ViewHider;
+import com.tunjid.rcswitchcontrol.R;
 import com.tunjid.rcswitchcontrol.abstractclasses.BaseFragment;
 import com.tunjid.rcswitchcontrol.activities.MainActivity;
 import com.tunjid.rcswitchcontrol.adapters.RemoteSwitchAdapter;
@@ -40,6 +40,7 @@ import com.tunjid.rcswitchcontrol.services.ServerNsdService;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.tunjid.rcswitchcontrol.Application.isServiceRunning;
@@ -59,12 +60,9 @@ public class ClientBleFragment extends BaseFragment
 
     private static final String TAG = ClientBleFragment.class.getSimpleName();
 
-    private int lastOffSet;
     private boolean isDeleting;
 
     private BluetoothDevice bluetoothDevice;
-    //private ClientBleService clientBleService;
-    //private ServerNsdService serverNsdService;
 
     private View progressBar;
     private Button sniffButton;
@@ -185,7 +183,7 @@ public class ClientBleFragment extends BaseFragment
         connectionStatus = (TextView) rootView.findViewById(R.id.connection_status);
         switchList = (RecyclerView) rootView.findViewById(R.id.switch_list);
 
-        viewHider = new ViewHider(rootView.findViewById(R.id.button_container));
+        viewHider = new ViewHider(rootView.findViewById(R.id.button_container), ViewHider.BOTTOM);
 
         sniffButton.setOnClickListener(this);
 
@@ -195,22 +193,24 @@ public class ClientBleFragment extends BaseFragment
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy == 0) return;
-                if (dy > 0) viewHider.hideTranslate();
-                else viewHider.showTranslate();
+                if (dy > 0) viewHider.hide();
+                else viewHider.show();
             }
         });
 
         ItemTouchHelper helper = new ItemTouchHelper(swipeCallBack);
         helper.attachToRecyclerView(switchList);
 
+        final AtomicInteger lastOffSet = new AtomicInteger(0);
+
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (verticalOffset == 0) return;
-                if (verticalOffset > lastOffSet) viewHider.hideTranslate();
-                else viewHider.showTranslate();
+                if (verticalOffset > lastOffSet.get()) viewHider.hide();
+                else viewHider.show();
 
-                lastOffSet = verticalOffset;
+                lastOffSet.set(verticalOffset);
             }
         });
 
